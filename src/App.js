@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { Suspense } from 'react';
+import { useRoutes } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
+import { ThemeProvider, CircularProgress } from '@material-ui/core';
+import GlobalStyles from './components/GlobalStyles';
+import theme from './theme';
+import routes from './routes';
 
-function App() {
+const App = () => {
+  const routing = useRoutes(routes);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <RecoilRoot>
+      <ThemeProvider theme={theme}>
+        <GlobalStyles />
+        <Suspense fallback={<CircularProgress />}>
+          {routing}
+        </Suspense>
+      </ThemeProvider>
+    </RecoilRoot>
+  );;
 }
 
 export default App;
