@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import MyCommunityFilter from '../filters/MyCommunityFilter';
-import { Box,  Typography  } from '@material-ui/core';
-import CreateCommunityBox from '../boxes/CreateCommunityBox';
-import {experimentalStyled} from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
+import { experimentalStyled } from '@material-ui/core';
+import CreateBox from '../boxes/CreateBox';
 
-const CommunitiesContainer = experimentalStyled('div')(() => ({
+const BoxContainer = experimentalStyled('div')(() => ({
   padding: '8px'
 }));
 
@@ -17,14 +17,12 @@ const SidebarContetnt = () => (
     }}
   >
     <MyCommunityFilter />
-     
- 
-    <Typography variant="h6" color='primary.contrastText' sx={{m:1}} > MY COMMUNITIES</Typography>
-    <Box>
-      <CommunitiesContainer>
-        <CreateCommunityBox/>
-      </CommunitiesContainer>
-    </Box>
+    <CreateBox title='Create Category'/>
+    
+    <Typography variant="h6" color='primary.contrastText' sx={{ m: 1,mt:4 }} > MY CATEGORIES</Typography>
+
+    <BoxContainer>
+    </BoxContainer>
   </Box>
 );
 
