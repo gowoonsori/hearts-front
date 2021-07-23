@@ -1,15 +1,14 @@
-input:focus{
-    outline:none;
+input:focus {
+  outline: none;
 }
 
-.community-filter-input {
-    width: 100%;
-    height: 100%;
-    font-size: 1.2em;
-    padding-left: 20px;
-    padding: 10px;
-    color: #d7dadc;
-    background-color: #1A1A1B;
-    border: none;
+.filter-input {
+  width: 100%;
+  height: 100%;
+  font-size: 1.2em;
+  padding-left: 20px;
+  padding: 10px;
+  color: #d7dadc;
+  background-color: #1a1a1b;
+  border: none;
 }
-
