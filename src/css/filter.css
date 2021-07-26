@@ -12,3 +12,13 @@ input:focus {
   background-color: #1a1a1b;
   border: none;
 }
+
+.cilpboard-textarea {
+  overflow: hidden;
+  position: relative;
+  top: 10px;
+  left: 10px;
+  z-index: 0;
+  width: 0;
+  height: 0;
+}

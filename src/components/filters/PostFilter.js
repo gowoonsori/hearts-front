@@ -18,7 +18,7 @@ const PostFilter = () => (
     }}
   >
     <SearchIcon sx={{ fontSize: '2em', m: 'auto 0' }} />
-    <input className="filter-input" placeholder="Search" />
+    <input className="filter-input" autoFocus placeholder="Search" />
   </Box>
 );
 

@@ -24,7 +24,7 @@ const MyCategoryFilter = () => {
         },
       }}
     >
-      <input className="filter-input" placeholder="filter" value={filter} onChange={onchageEvent}></input>
+      <input className="filter-input" autoFocus placeholder="filter" value={filter} onChange={onchageEvent}></input>
     </Box>
   );
 };
