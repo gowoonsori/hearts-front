@@ -1,9 +1,9 @@
-import { Box, Button, List, ListItem, Popover, Typography } from '@material-ui/core';
+import { Box, List, ListItem, Popover } from '@material-ui/core';
 import { useRecoilValue } from 'recoil';
 import { categoryList } from '../../atoms/category';
 import PropTypes from 'prop-types';
 
-const CategoryBox = ({ anchor, onClose, open, onClick }) => {
+const CategorySelectBox = ({ anchor, onClose, open, onClick }) => {
   const categories = useRecoilValue(categoryList);
   return (
     <Popover
@@ -32,10 +32,10 @@ const CategoryBox = ({ anchor, onClose, open, onClick }) => {
   );
 };
 
-CategoryBox.propTypes = {
+CategorySelectBox.propTypes = {
   anchor: PropTypes.object,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
 };
-export default CategoryBox;
+export default CategorySelectBox;

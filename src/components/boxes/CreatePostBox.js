@@ -1,11 +1,25 @@
 import { Avatar, Box, Button, Divider, TextField, Typography } from '@material-ui/core';
-import { useCallback, useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useCallback, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { categoryList } from '../../atoms/category';
-import CategoryBox from './CategoryBox';
+import { tagList } from '../../atoms/tag';
+import CategorySelectBox from './CategorySelectBox';
+import TagBox from './TagBox';
+import TagSelectBox from './TagSelectBox';
 
 const CreatePostBox = () => {
   const categories = useRecoilValue(categoryList);
+  const [tags, setTags] = useRecoilState(tagList);
+
+  const deleteTagEvent = useCallback(
+    (e) => {
+      const newTags = tags.filter((v) => v !== e.target.id);
+      setTags(newTags);
+    },
+    [tags, setTags]
+  );
+
+  /* for category 선택 모달 */
   const [selectCategory, setSelectCategory] = useState(null);
   const [categoryButton, setCategoryButton] = useState(null);
   const CatgoryBoxOpen = Boolean(categoryButton);
@@ -15,15 +29,31 @@ const CreatePostBox = () => {
       setSelectCategory(e.target.value);
       setCategoryButton(null);
     },
-    [setSelectCategory]
+    [setSelectCategory, setCategoryButton]
   );
 
-  const categoryButtonClick = useCallback((event) => {
-    setCategoryButton(event.currentTarget);
-  }, []);
+  const categoryButtonClick = useCallback(
+    (e) => {
+      setCategoryButton(e.currentTarget);
+    },
+    [setCategoryButton]
+  );
 
   const categorySelectClose = useCallback(() => {
     setCategoryButton(null);
+  }, [setCategoryButton]);
+
+  /* for tag 선택 모달 */
+  const [selectTag, setSelectTag] = useState(null);
+  const [tagButton, setTagButton] = useState(null);
+  const TagBoxOpen = Boolean(tagButton);
+
+  const tagButtonClick = useCallback((event) => {
+    setTagButton(event.currentTarget);
+  }, []);
+
+  const tagSelectClose = useCallback(() => {
+    setTagButton(null);
   }, []);
 
   return (
@@ -40,17 +70,21 @@ const CreatePostBox = () => {
             </Box>
           )}
         </Box>
+        <Box sx={{ display: 'inline-flex' }}>{tags && tags.map((tag, index) => <TagBox key={index} id={index} tag={tag} deleteEvent={deleteTagEvent}></TagBox>)}</Box>
         <Divider sx={{ mt: 2, backgroundColor: 'primary.contrastText' }} />
         <Box sx={{ display: 'flex', mt: 2 }}>
           <Button onClick={categoryButtonClick} sx={{ borderRadius: '20px', width: '300px', border: '3px solid', borderColor: 'primary.contrastText', color: 'primary.contrastText', fontWeight: 600 }}>
             카테고리 선택
           </Button>
-          <Button sx={{ borderRadius: '20px', width: '300px', border: '3px solid', borderColor: 'primary.contrastText', color: 'primary.contrastText', fontWeight: 600 }}>태그 추가</Button>
+          <Button onClick={tagButtonClick} sx={{ borderRadius: '20px', width: '300px', border: '3px solid', borderColor: 'primary.contrastText', color: 'primary.contrastText', fontWeight: 600 }}>
+            태그 추가
+          </Button>
           <Button sx={{ borderRadius: '20px', width: '400px', border: '3px solid', borderColor: 'primary.contrastText', color: 'primary.contrastText', fontWeight: 600 }}>검색 노출 하기</Button>
           <Button sx={{ borderRadius: '20px', width: '300px', border: '3px solid', backgroundColor: 'primary.contrastText', color: 'primary.main', fontWeight: 800 }}>작성하기</Button>
         </Box>
       </form>
-      <CategoryBox anchor={categoryButton} onClose={categorySelectClose} open={CatgoryBoxOpen} onClick={changeCategory} />
+      <CategorySelectBox anchor={categoryButton} onClose={categorySelectClose} open={CatgoryBoxOpen} onClick={changeCategory} />
+      <TagSelectBox anchor={tagButton} onClose={tagSelectClose} open={TagBoxOpen} />
     </Box>
   );
 };

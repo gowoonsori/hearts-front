@@ -1,7 +1,7 @@
 import { Box } from '@material-ui/core';
 import { useRecoilValue } from 'recoil';
 import { categoryFilterList } from '../../atoms/category';
-import CategoryBox from '../boxes/CategoryBox';
+import CategoryBox from './CategoryBox';
 
 const CategoryList = () => {
   const categories = useRecoilValue(categoryFilterList);
