@@ -24,7 +24,7 @@ const DashboardNavbar = ({ onNavOpen }) => {
           <MenuIcon sx={{ fontSize: '1.4em' }} />
         </IconButton>
 
-        <Box sx={{ textAlign: 'center', flexGrow: 1, p: 1 }}>
+        <Box sx={{ display: 'flex', textAlign: 'center', flexGrow: 1, p: 1 }}>
           <PostFilter />
         </Box>
         <Box>

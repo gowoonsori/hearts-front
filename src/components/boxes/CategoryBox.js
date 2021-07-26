@@ -1,16 +1,41 @@
+import { Box, Button, List, ListItem, Popover, Typography } from '@material-ui/core';
+import { useRecoilValue } from 'recoil';
+import { categoryList } from '../../atoms/category';
 import PropTypes from 'prop-types';
-import { Box, Typography } from '@material-ui/core';
 
-const CreateBox = ({ category }) => (
-  <Box sx={{ display: 'flex', m: 1 }} id={category.id}>
-    <Typography color="secondary.main" sx={{ m: 'auto 0' }}>
-      {category.title}
-    </Typography>
-  </Box>
-);
-
-CreateBox.propTypes = {
-  category: PropTypes.object,
+const CategoryBox = ({ anchor, onClose, open, onClick }) => {
+  const categories = useRecoilValue(categoryList);
+  return (
+    <Popover
+      anchorEl={anchor}
+      open={open}
+      onClose={onClose}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'left',
+      }}
+    >
+      <Box sx={{ border: '1px solid', borderColor: 'primary.contrastText', width: '200px', backgroundColor: 'primary.main', color: 'secondary.main' }}>
+        <List>
+          {categories.map((category) => (
+            <ListItem sx={{ '&:hover': { cursor: 'pointer', backgroundColor: 'ternary.main' } }} key={category.id} onClick={onClick} value={category.id}>
+              {category.title}
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+    </Popover>
+  );
 };
 
-export default CreateBox;
+CategoryBox.propTypes = {
+  anchor: PropTypes.object,
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
+export default CategoryBox;
