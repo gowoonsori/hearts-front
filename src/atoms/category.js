@@ -3,16 +3,7 @@ import { atom, selector } from 'recoil';
 // 해당 유저의 카테고리 리스트
 export const categoryList = atom({
   key: 'categoryList',
-  default: [
-    {
-      id: 1,
-      title: '샘플 카테고리1',
-    },
-    {
-      id: 2,
-      title: '샘플 카테고리2',
-    },
-  ],
+  default: [],
 });
 
 export const categoryFilterValue = atom({

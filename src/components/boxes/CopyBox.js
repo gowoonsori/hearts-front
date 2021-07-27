@@ -2,14 +2,26 @@ import { useCallback, useRef } from 'react';
 import { Box } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import '../../css/filter.css';
+import instance from '../../atoms/axios';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import posts from '../../atoms/post';
 
-const CopyBox = ({ Icon, content }) => {
+const CopyBox = ({ id,Icon, content }) => {
   const copyRef = useRef();
+  const [postList,setPostList] = useRecoilState(posts);
+  const axios = useRecoilValue(instance);
 
-  const copyEvent = useCallback(() => {
+  const copyEvent = useCallback(async() => {
+    const res = await axios.patch(`/user/post/${id}/share`);
+    if(res.data.success){
+      const newList = postList.slice(0,postList.length);
+      const index = newList.findIndex((e) => e.id === id);
+      newList.splice(index,1,res.data.response);
+      setPostList(newList);
+    }
     copyRef.current.select();
     document.execCommand('copy');
-  }, [copyRef]);
+  }, [copyRef,postList,setPostList,axios]);
 
   return (
     <Box sx={{ display: 'inline-flex', mr: 2 }}>
@@ -20,6 +32,7 @@ const CopyBox = ({ Icon, content }) => {
 };
 
 CopyBox.propTypes = {
+  id: PropTypes.number.isRequired,
   Icon: PropTypes.object.isRequired,
   content: PropTypes.string.isRequired,
 };

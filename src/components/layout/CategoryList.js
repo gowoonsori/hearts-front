@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { categoryFilterList } from '../../atoms/category';
 import CategoryBox from './CategoryBox';
 
-const CategoryList = () => {
+const CategoryList = ({onClose}) => {
   const categories = useRecoilValue(categoryFilterList);
 
   return (
@@ -15,7 +15,7 @@ const CategoryList = () => {
       }}
     >
       {categories.map((category) => (
-        <CategoryBox key={category.id} category={category}></CategoryBox>
+        <CategoryBox key={category.id} category={category} onClose={onClose} ></CategoryBox>
       ))}
     </Box>
   );

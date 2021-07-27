@@ -3,8 +3,14 @@ import { atom } from 'recoil';
 // 해당 유저의 카테고리 리스트
 const posts = atom({
   key: 'posts',
-  default: [
-    {
+  default: [ ],
+});
+
+export default posts;
+
+/*
+
+ {
       content: '샘플 문구1',
       total_like: 0,
       share_cnt: 0,
@@ -136,7 +142,4 @@ const posts = atom({
       tags: ['하늘'],
       id: 12,
     },
-  ],
-});
-
-export default posts;
+*/
