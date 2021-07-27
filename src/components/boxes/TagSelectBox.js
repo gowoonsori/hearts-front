@@ -1,22 +1,39 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { Box, Popover, TextField, Typography } from '@material-ui/core';
 import { useRecoilState } from 'recoil';
 import PropTypes from 'prop-types';
 import { tagList } from '../../atoms/tag';
 import TagBox from './TagBox';
-import useInput from '../../hooks/useInput';
 
 const TagSelectBox = ({ anchor, onClose, open }) => {
   const [tags, setTags] = useRecoilState(tagList);
-  const [createTag, onChangeTag, setCreateTag] = useInput('');
+  const [createTag, setCreateTag] = useState('');
+  const randomColor = useCallback(() => Math.ceil((Math.random() * 360) % 360).toString(10), []);
+  const [createTagObject, setCreateTagObject] = useState({});
+  const [currentColor, setCurrentColor] = useState(Number.parseInt(randomColor()));
+
+  const onChangeTag = useCallback(
+    (e) => {
+      if (!currentColor) {
+        setCurrentColor(Number.parseInt(randomColor()));
+      }
+      setCreateTagObject({
+        tag: e.target.value,
+        color: currentColor,
+      });
+      setCreateTag(e.target.value);
+    },
+    [randomColor, setCreateTag, currentColor, setCurrentColor, setCreateTagObject]
+  );
 
   const createTagEvent = useCallback(() => {
     if (!tags.find((e) => e === createTag)) {
-      const newTags = [...tags, createTag];
+      const newTags = [...tags, createTagObject];
       setTags(newTags);
     }
     setCreateTag('');
-  }, [tags, createTag, setTags, setCreateTag]);
+    setCurrentColor(null);
+  }, [tags, createTag, setTags, createTagObject, setCreateTag, setCurrentColor]);
 
   const onEnterPress = useCallback(
     (e) => {
@@ -25,9 +42,9 @@ const TagSelectBox = ({ anchor, onClose, open }) => {
     [createTagEvent]
   );
 
-  const deleteTagEvent = () => {
+  const deleteTagEvent = useCallback(() => {
     setCreateTag('');
-  };
+  }, [setCreateTag]);
 
   return (
     <Popover
@@ -49,7 +66,7 @@ const TagSelectBox = ({ anchor, onClose, open }) => {
           <Typography sx={{ fontWeight: 700, margin: 'auto 0', ml: 1, mr: 2 }} variant="h5">
             생성{' '}
           </Typography>
-          {createTag && <TagBox tag={createTag} onClick={createTagEvent} deleteEvent={deleteTagEvent} />}
+          {createTag && <TagBox tag={createTagObject} onClick={createTagEvent} deleteEvent={deleteTagEvent} />}
         </Box>
       </Box>
     </Popover>

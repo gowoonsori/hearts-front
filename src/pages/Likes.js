@@ -7,14 +7,16 @@ import instance from '../atoms/axios';
 
 const Likes = () => {
   const axios = useRecoilValue(instance);
-  const [postList,setPostList] = useRecoilState(posts);
+  const [postList, setPostList] = useRecoilState(posts);
 
-  useEffect(async()=>{
-    const postRes = await axios.get('/user/post/like').catch((e)=> console.log(e));
-    if(postRes?.data.success){
-      setPostList(postRes.data.response);
-    }
-  },[axios,setPostList]);
+  useEffect(() => {
+    axios
+      .get('/user/post/like')
+      .then((res) => {
+        if (res?.data.success) setPostList(res.data.response);
+      })
+      .catch((e) => console.log(e));
+  }, [axios, setPostList]);
 
   return (
     <Container sx={{ mt: 3 }} maxWidth="md">

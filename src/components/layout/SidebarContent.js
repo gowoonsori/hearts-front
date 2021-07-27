@@ -14,46 +14,51 @@ const BoxContainer = experimentalStyled('div')(() => ({
   padding: '8px',
 }));
 
-const SidebarContetnt = ({onClose}) => {
+const SidebarContetnt = ({ onClose }) => {
   const axios = useRecoilValue(instance);
-  const [categories,setCategories] = useRecoilState(categoryList);
-  const [category,onChangeCategory,setCategory] = useInput('');
-  const crateCategoryEvent = useCallback(async()=> {
-    const res = axios.post('user/category', {
-      "title" : category
-    }).catch((e)=> console.log(e));
+  const [categories, setCategories] = useRecoilState(categoryList);
+  const [category, onChangeCategory, setCategory] = useInput('');
 
-    if(res?.data.response){
-      const newList = categoryList.splice(0,categoryList.length);
-      newList.push(res.data.response);
-      setCategories(newList);
-    }
-  },[axios,category,categoryList,setCategories]);
+  const crateCategoryEvent = useCallback(() => {
+    axios
+      .post('user/category', {
+        title: category,
+      })
+      .then((res) => {
+        if (res?.data.response) {
+          const newList = categories.splice(0, categories.length);
+          newList.push(res.data.response);
+          setCategories(newList);
+        }
+      })
+      .catch((e) => console.log(e));
+  }, [axios, category, categories, setCategories]);
 
-  return(
-  <Box
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%',
-    }}
-  >
-    <MyCategoryFilter />
-    <CreateCategoryBox title="Create Category" />
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+      }}
+    >
+      <MyCategoryFilter />
+      <CreateCategoryBox title="Create Category" />
 
-    <Typography variant="h6" color="primary.contrastText" sx={{ m: 1, mt: 4 }}>
-      {' '}
-      MY CATEGORIES
-    </Typography>
+      <Typography variant="h6" color="primary.contrastText" sx={{ m: 1, mt: 4 }}>
+        {' '}
+        MY CATEGORIES
+      </Typography>
 
-    <BoxContainer>
-      <CategoryList onClose={onClose}/>
-    </BoxContainer>
-  </Box>
-)};
+      <BoxContainer>
+        <CategoryList onClose={onClose} />
+      </BoxContainer>
+    </Box>
+  );
+};
 
 SidebarContetnt.propTypes = {
-  onClose : PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default SidebarContetnt;

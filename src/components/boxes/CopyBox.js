@@ -6,22 +6,22 @@ import instance from '../../atoms/axios';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import posts from '../../atoms/post';
 
-const CopyBox = ({ id,Icon, content }) => {
+const CopyBox = ({ id, Icon, content }) => {
   const copyRef = useRef();
-  const [postList,setPostList] = useRecoilState(posts);
+  const [postList, setPostList] = useRecoilState(posts);
   const axios = useRecoilValue(instance);
 
-  const copyEvent = useCallback(async() => {
-    const res = await axios.patch(`/user/post/${id}/share`);
-    if(res.data.success){
-      const newList = postList.slice(0,postList.length);
-      const index = newList.findIndex((e) => e.id === id);
-      newList.splice(index,1,res.data.response);
-      setPostList(newList);
-    }
+  const copyEvent = useCallback(async () => {
     copyRef.current.select();
     document.execCommand('copy');
-  }, [copyRef,postList,setPostList,axios]);
+    const res = await axios.patch(`/user/post/${id}/share`);
+    if (res.data.success) {
+      const newList = postList.slice(0, postList.length);
+      const index = newList.findIndex((e) => e.id === id);
+      newList.splice(index, 1, res.data.response);
+      setPostList(newList);
+    }
+  }, [copyRef, postList, setPostList, axios, id]);
 
   return (
     <Box sx={{ display: 'inline-flex', mr: 2 }}>

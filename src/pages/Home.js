@@ -10,32 +10,40 @@ import user from '../atoms/user';
 import likes from '../atoms/likes';
 
 const Home = () => {
-  const [postList,setPostList] = useRecoilState(posts);
-  const [categories,setCategories] = useRecoilState(categoryList);
-  const [userInfo,setUserInfo] = useRecoilState(user);
-  const [likeList,setLikeList] = useRecoilState(likes);
+  const [postList, setPostList] = useRecoilState(posts);
+  const [categories, setCategories] = useRecoilState(categoryList);
+  const [userInfo, setUserInfo] = useRecoilState(user);
+  const [likeList, setLikeList] = useRecoilState(likes);
   const axios = useRecoilValue(instance);
 
-  useEffect(async() => {
-    const userRes = await axios.get('/user').catch((e)=> console.log(e));
-    if(userRes?.data.success){
-      setUserInfo(userRes.data.response);
-      if(userRes.data.response.likes){
-        const newLikes= userRes.data.response.likes?.split(',');
-        setLikeList(newLikes);
-      }
-    }
+  useEffect(() => {
+    axios
+      .get('/user')
+      .then((res) => {
+        if (res?.data.success) {
+          setUserInfo(res.data.response);
+          if (res.data.response.likes) {
+            const newLikes = res.data.response.likes?.split(',');
+            setLikeList(newLikes);
+          }
+        }
+      })
+      .catch((e) => console.log(e));
 
-    const postRes = await axios.get('/user/post/all').catch((e)=> console.log(e));
-    if(postRes?.data.success){
-      setPostList(postRes.data.response);
-    }
+    axios
+      .get('/user/post/all')
+      .then((res) => {
+        if (res?.data.success) setPostList(res.data.response);
+      })
+      .catch((e) => console.log(e));
 
-    const categoryRes = await axios.get('/user/category').catch((e)=> console.log(e));
-    if(categoryRes?.data.success){
-      setCategories(categoryRes.data.response);
-    }
-  },[]);
+    axios
+      .get('/user/category')
+      .then((res) => {
+        if (res?.data.success) setCategories(res.data.response);
+      })
+      .catch((e) => console.log(e));
+  }, [axios, setCategories, setLikeList, setPostList, setUserInfo]);
 
   return (
     <Container sx={{ mt: 3 }} maxWidth="md">
