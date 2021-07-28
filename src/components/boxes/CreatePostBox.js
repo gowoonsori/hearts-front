@@ -11,6 +11,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import useInput from '../../hooks/useInput';
 import instance from '../../atoms/axios';
 import posts from '../../atoms/post';
+import useOpen from '../../hooks/useOpen';
 
 const CreatePostBox = () => {
   const axios = useRecoilValue(instance);
@@ -19,11 +20,7 @@ const CreatePostBox = () => {
   const [content, onChangeContent, setContent] = useInput('');
   const [selectCategory, setSelectCategory] = useState(null);
   const [tags, setTags] = useRecoilState(tagList);
-
-  const [search, setSearch] = useState(true);
-  const onChangeSearchEvent = useCallback(() => {
-    setSearch(!search);
-  }, [search, setSearch]);
+  const [search, onChangeSearchEvent,setSearch] = useOpen(true);
 
   /* 문구 등록 버튼 */
   const createPost = useCallback(() => {

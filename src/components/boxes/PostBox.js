@@ -19,7 +19,7 @@ const PostBox = ({ post }) => {
   const [likeList, setLikeList] = useRecoilState(likes);
   const [postList, setPostList] = useRecoilState(posts);
   const axios = useRecoilValue(instance);
-
+  
   const likeEvent = useCallback(async () => {
     const res = await axios.patch(`/user/post/${post.id}/like`).catch((e) => console.log(2));
     if (res?.data.success) {
@@ -27,7 +27,7 @@ const PostBox = ({ post }) => {
       const newLikeList = likeList.slice(0, likeList.length);
       newLikeList.push(post.id);
       setLikeList(newLikeList);
-
+      
       //기존의 postList atom 내용 업데이트
       const newPostList = postList.slice(0, postList.length);
       const index = newPostList.findIndex((e) => e.id == post.id);
@@ -35,14 +35,16 @@ const PostBox = ({ post }) => {
       setPostList(newPostList);
     }
   }, [likeList, setLikeList, postList, setPostList]);
-
+  
   const deleteLikeEvent = useCallback(async () => {
     const res = await axios.delete(`/user/post/${post.id}/like`).catch((e) => console.log(2));
     if (res?.data.success) {
       //좋아요 atom 업데이트
+      console.log(likeList);
       const newLikeList = likeList.filter((like) => like != post.id);
+      console.log(newLikeList);
       setLikeList(newLikeList);
-
+      
       //기존의 postList atom 내용 업데이트
       const newPostList = postList.slice(0, postList.length);
       const index = newPostList.findIndex((e) => e.id == post.id);
@@ -50,8 +52,11 @@ const PostBox = ({ post }) => {
       setPostList(newPostList);
     }
   }, [likeList, post, setLikeList, postList, setPostList]);
+  
+  const liked = useCallback(()=> {
+    return likeList.find((v) => v == post.id)
+  },[likeList]);
 
-  const liked = likeList.find((v) => v == post.id);
   return (
     <Container id={post.id} sx={{ borderRadius: '5px', display: 'block', mx: 0, my: 1, py: 2, px: 4, backgroundColor: 'primary.main', color: 'secondary.main' }}>
       <Box sx={{ display: 'inline' }}>
@@ -59,7 +64,7 @@ const PostBox = ({ post }) => {
       </Box>
       <TagList tags={post.tags} />
       <Box sx={{ width: '100%', display: 'inline-flex', justifyContent: 'space-between' }}>
-        {liked ? <PostUtilBox Icon={FavoriteIcon} text={post.total_like} onClick={deleteLikeEvent} /> : <PostUtilBox Icon={FavoriteBorderIcon} text={post.total_like} onClick={likeEvent} />}
+        {liked() ? <PostUtilBox Icon={FavoriteIcon} text={post.total_like} onClick={deleteLikeEvent} /> : <PostUtilBox Icon={FavoriteBorderIcon} text={post.total_like} onClick={likeEvent} />}
         <PostUtilBox Icon={ShareIcon} text={post.share_cnt} />
         <CopyBox id={post.id} Icon={FileCopyIcon} content={post.content} />
         {post.user_id === userInfo.id && <MoreButton />}

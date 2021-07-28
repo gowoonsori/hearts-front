@@ -15,18 +15,19 @@ const Home = () => {
 
   useEffect(() => {
     axios
+    .get('/user/category')
+    .then((res) => {
+      if (res?.data.success) setCategories(res.data.response);
+    })
+    .catch((e) => console.log(e));
+
+    axios
       .get('/user/post/all')
       .then((res) => {
         if (res?.data.success) setPostList(res.data.response);
       })
       .catch((e) => console.log(e));
-
-    axios
-      .get('/user/category')
-      .then((res) => {
-        if (res?.data.success) setCategories(res.data.response);
-      })
-      .catch((e) => console.log(e));
+   
   }, [axios, setCategories,  setPostList ]);
 
   return (
