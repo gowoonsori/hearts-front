@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from '@material-ui/core';
+import { Avatar, Box, Container, Typography } from '@material-ui/core';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {user} from '../../atoms/user';
 import TagList from '../lists/TagList';
@@ -40,9 +40,7 @@ const PostBox = ({ post }) => {
     const res = await axios.delete(`/user/post/${post.id}/like`).catch((e) => console.log(2));
     if (res?.data.success) {
       //좋아요 atom 업데이트
-      console.log(likeList);
       const newLikeList = likeList.filter((like) => like != post.id);
-      console.log(newLikeList);
       setLikeList(newLikeList);
       
       //기존의 postList atom 내용 업데이트
@@ -56,18 +54,22 @@ const PostBox = ({ post }) => {
   const liked = useCallback(()=> {
     return likeList.find((v) => v == post.id)
   },[likeList]);
-
   return (
     <Container id={post.id} sx={{ borderRadius: '5px', display: 'block', mx: 0, my: 1, py: 2, px: 4, backgroundColor: 'primary.main', color: 'secondary.main' }}>
+      <Box sx={{ display: 'flex', mb:5 }}>
+        <Avatar/>
+        <Typography sx={{margin:'auto 0',mx:2}} variant="h3">{post.owner}</Typography>
+        <Typography variant="h6" sx={{margin:'auto 0',color:"primary.contrastText"}}>{post.category}</Typography>
+      </Box>
       <Box sx={{ display: 'inline' }}>
         <Typography variant="h2">{post.content}</Typography>
       </Box>
-      <TagList tags={post.tags} />
-      <Box sx={{ width: '100%', display: 'inline-flex', justifyContent: 'space-between' }}>
+      <TagList tags={JSON.parse(post.tags)} />
+      <Box sx={{ width: '100%', display: 'inline-flex', justifyContent: 'space-between', mt:2 }}>
         {liked() ? <PostUtilBox Icon={FavoriteIcon} text={post.total_like} onClick={deleteLikeEvent} /> : <PostUtilBox Icon={FavoriteBorderIcon} text={post.total_like} onClick={likeEvent} />}
         <PostUtilBox Icon={ShareIcon} text={post.share_cnt} />
         <CopyBox id={post.id} Icon={FileCopyIcon} content={post.content} />
-        {post.user_id === userInfo.id && <MoreButton />}
+        {post.user_id === userInfo.id && <MoreButton id={post.id} />}
       </Box>
     </Container>
   );

@@ -5,7 +5,7 @@ import TagBox from '../boxes/TagBox';
 const TagList = ({ tags }) => {
   return (
     <Box sx={{ display: 'inline-flex', p: 0, m: 2, ml: 0, mb: 1 }}>
-      {tags.map((tag, index) => (
+      {tags && tags.map((tag, index) => (
         <TagBox key={index} tag={tag} />
       ))}
     </Box>

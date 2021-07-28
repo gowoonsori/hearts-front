@@ -1,19 +1,36 @@
 import { Box, Button, Popover } from '@material-ui/core';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import { useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { useState, useCallback } from 'react';
+import instance from '../../atoms/axios';
+import posts from '../../atoms/post';
 
-const MoreButton = () => {
+const MoreButton = ({id}) => {
+  const axios = useRecoilValue(instance);
+  const [postList, setPostList] = useRecoilState(posts);
+
+  const deletePost = useCallback(()=>{
+    axios.delete(`/user/post/${id}`)
+    .then((res)=>{
+      if(res?.data.success){
+        const newLikeList = postList.filter((post) => post.id != id);
+        setPostList(newLikeList);
+      }
+    })
+    .catch(e=>console.log(e));
+  },[axios,postList,setPostList]);
+
   const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event) => {
+  const handleClick = useCallback((event) => {
     setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
+  },[setAnchorEl]);
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  },[setAnchorEl]);
 
   const open = Boolean(anchorEl);
+
+
 
   return (
     <Box>
@@ -32,7 +49,7 @@ const MoreButton = () => {
         }}
       >
         <Button color="secondary">수정하기</Button>
-        <Button color="secondary">삭제하기</Button>
+        <Button color="secondary" onClick={deletePost}>삭제하기</Button>
       </Popover>
     </Box>
   );
