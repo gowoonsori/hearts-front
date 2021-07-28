@@ -4,33 +4,41 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { useState, useCallback } from 'react';
 import instance from '../../atoms/axios';
 import posts from '../../atoms/post';
+import { useNavigate } from 'react-router-dom';
 
-const MoreButton = ({id}) => {
+const MoreButton = ({ id }) => {
   const axios = useRecoilValue(instance);
   const [postList, setPostList] = useRecoilState(posts);
+  const navigate = useNavigate();
 
-  const deletePost = useCallback(()=>{
-    axios.delete(`/user/post/${id}`)
-    .then((res)=>{
-      if(res?.data.success){
-        const newLikeList = postList.filter((post) => post.id != id);
-        setPostList(newLikeList);
-      }
-    })
-    .catch(e=>console.log(e));
-  },[axios,postList,setPostList]);
+  const deletePost = useCallback(() => {
+    axios
+      .delete(`/user/post/${id}`)
+      .then((res) => {
+        if (res?.data.success) {
+          const newLikeList = postList.filter((post) => post.id != id);
+          setPostList(newLikeList);
+        }
+      })
+      .catch((e) => console.log(e));
+  }, [axios, postList, setPostList]);
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const handleClick = useCallback((event) => {
-    setAnchorEl(event.currentTarget);
-  },[setAnchorEl]);
+  const handleClick = useCallback(
+    (event) => {
+      setAnchorEl(event.currentTarget);
+    },
+    [setAnchorEl]
+  );
   const handleClose = useCallback(() => {
     setAnchorEl(null);
-  },[setAnchorEl]);
+  }, [setAnchorEl]);
+
+  const updateClick = useCallback(() => {
+    navigate('/edit');
+  }, [navigate]);
 
   const open = Boolean(anchorEl);
-
-
 
   return (
     <Box>
@@ -48,8 +56,12 @@ const MoreButton = ({id}) => {
           horizontal: 'center',
         }}
       >
-        <Button color="secondary">수정하기</Button>
-        <Button color="secondary" onClick={deletePost}>삭제하기</Button>
+        <Button color="secondary" onClick={updateClick}>
+          수정하기
+        </Button>
+        <Button color="secondary" onClick={deletePost}>
+          삭제하기
+        </Button>
       </Popover>
     </Box>
   );

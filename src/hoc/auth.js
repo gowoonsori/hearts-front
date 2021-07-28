@@ -12,17 +12,17 @@ const Auth = (SpecificComponent) => {
 
     useEffect(() => {
       const user = userInfo;
-      if (typeof(user) === "string" || !user?.id) {
-        navigate('/login',{replace : true});
-      } else{
+      if (typeof user === 'string' || !user?.id) {
+        navigate('/login', { replace: true });
+      } else {
         setUserInfo(user);
         if (user.likes) {
           const newLikes = user.likes.split(',');
           setLikeList(newLikes);
         }
       }
-    }, [userInfo,setUserInfo,setLikeList]);
-    
+    }, [userInfo, setUserInfo, setLikeList]);
+
     return <SpecificComponent />;
   };
   return Authentication;
