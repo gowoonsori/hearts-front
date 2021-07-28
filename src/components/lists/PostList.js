@@ -5,7 +5,7 @@ import PostBox from '../boxes/PostBox';
 const PostList = ({ posts }) => {
   return (
     <Box sx={{ p: 0, m: 1 }}>
-      {posts.map((post) => (
+      {posts?.map((post) => (
         <PostBox key={post.id} post={post} />
       ))}
     </Box>

@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Likes from './pages/Likes';
+import LogOut from './pages/Logout';
 
 const routes = [
   {
@@ -14,11 +15,13 @@ const routes = [
       { path: '/', element: <Home /> },
       { path: '/likes', element: <Likes /> },
       { path: '/profile', element: <Profile /> },
+      { path: '/logout', element: <LogOut /> },
     ],
   },
   {
     path: '/login',
     element: <Login />,
+    
   },
 ];
 

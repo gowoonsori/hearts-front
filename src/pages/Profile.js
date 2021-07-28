@@ -1,6 +1,7 @@
 import { Container, Box} from '@material-ui/core';
 import { useRecoilState } from 'recoil';
-import user from '../atoms/user';
+import {user} from '../atoms/user';
+import Auth from '../hoc/auth';
 
 const Profile = () => {
   const [userInfo,setUserInfo] = useRecoilState(user);
@@ -13,4 +14,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Auth(Profile);

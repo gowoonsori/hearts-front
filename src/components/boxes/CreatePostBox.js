@@ -26,22 +26,28 @@ const CreatePostBox = () => {
   }, [search, setSearch]);
 
   /* 문구 등록 버튼 */
-  const createPost = useCallback(async () => {
+  const createPost = useCallback(() => {
     if (!selectCategory || !content) return null;
-    const res = await axios
+    axios
       .post('/user/post', {
         content: content,
         search: search,
         category_id: selectCategory,
         tags: tags,
+      }).then((res)=>{
+        if (res.data.success) {
+          if(postList.length===0){
+            setPostList([res.data.response]);
+          }else{
+            const newPostList = postList.slice(0, postList.length);
+            newPostList.push(res.data.response);
+            setPostList(newPostList);
+          }
+        }
       })
       .catch((e) => console.log(e));
 
-    if (res?.data?.success) {
-      const newPostList = postList.slice(0, postList.length);
-      newPostList.push(res.data.response);
-      setPostList(newPostList);
-    }
+    
     setContent('');
     setSelectCategory(null);
     setTags([]);

@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import posts from '../atoms/post';
 import PostList from '../components/lists/PostList';
 import instance from '../atoms/axios';
+import Auth from '../hoc/auth';
 
 const Likes = () => {
   const axios = useRecoilValue(instance);
@@ -25,4 +26,4 @@ const Likes = () => {
   );
 };
 
-export default Likes;
+export default Auth(Likes);

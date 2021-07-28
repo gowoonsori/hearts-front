@@ -1,6 +1,6 @@
 import { Box, Container, Typography } from '@material-ui/core';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import user from '../../atoms/user';
+import {user} from '../../atoms/user';
 import TagList from '../lists/TagList';
 import MoreButton from '../buttons/MoreButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';

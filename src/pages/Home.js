@@ -6,30 +6,14 @@ import PostList from '../components/lists/PostList';
 import instance from '../atoms/axios';
 import { useEffect } from 'react';
 import { categoryList } from '../atoms/category';
-import user from '../atoms/user';
-import likes from '../atoms/likes';
+import Auth from '../hoc/auth';
 
 const Home = () => {
   const [postList, setPostList] = useRecoilState(posts);
   const [categories, setCategories] = useRecoilState(categoryList);
-  const [userInfo, setUserInfo] = useRecoilState(user);
-  const [likeList, setLikeList] = useRecoilState(likes);
   const axios = useRecoilValue(instance);
 
   useEffect(() => {
-    axios
-      .get('/user')
-      .then((res) => {
-        if (res?.data.success) {
-          setUserInfo(res.data.response);
-          if (res.data.response.likes) {
-            const newLikes = res.data.response.likes?.split(',');
-            setLikeList(newLikes);
-          }
-        }
-      })
-      .catch((e) => console.log(e));
-
     axios
       .get('/user/post/all')
       .then((res) => {
@@ -43,7 +27,7 @@ const Home = () => {
         if (res?.data.success) setCategories(res.data.response);
       })
       .catch((e) => console.log(e));
-  }, [axios, setCategories, setLikeList, setPostList, setUserInfo]);
+  }, [axios, setCategories,  setPostList ]);
 
   return (
     <Container sx={{ mt: 3 }} maxWidth="md">
@@ -53,4 +37,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Auth(Home);

@@ -1,12 +1,25 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
+import instance from './axios';
 
 // 해당 유저의 카테고리 리스트
-const user = atom({
+export const user = atom({
   key: 'user',
-  default: {
-    id: 1,
-    name: '홍길동',
-  },
+  default: {},
 });
 
-export default user;
+export const userSelector = selector({
+  key: 'userSelector',
+  get: async ({ get }) => {
+    if (get(user).id) return get(user);
+    
+    const res = await get(instance).get('/user').catch((e) => {
+      return '잘못된 요청입니다.';
+    });
+    if(typeof(res)==='string')return res;
+    else if(res.data.success) return res.data.response;
+    else return res.data.response.message;
+  },
+  set: ({ set }, userInfo) => {
+    set(user, userInfo);
+  }
+});
