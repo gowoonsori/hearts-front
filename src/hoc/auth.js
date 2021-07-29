@@ -18,10 +18,11 @@ const Auth = (SpecificComponent) => {
         setUserInfo(user);
         if (user.likes) {
           const newLikes = user.likes.split(',');
-          setLikeList(newLikes);
+          const convertNumber = newLikes.map(Number);
+          setLikeList(convertNumber);
         }
       }
-    }, [userInfo, setUserInfo, setLikeList]);
+    }, [userInfo, setUserInfo, setLikeList,navigate]);
 
     return <SpecificComponent />;
   };

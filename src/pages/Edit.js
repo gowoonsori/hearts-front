@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Container, Divider, TextField, Typography } from '@material-ui/core';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { categoryList } from '../atoms/category';
 import { tagList } from '../atoms/tag';
@@ -10,23 +10,29 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import useInput from '../hooks/useInput';
 import instance from '../atoms/axios';
-import posts from '../atoms/post';
+import {editPost} from '../atoms/post';
 import useOpen from '../hooks/useOpen';
+import { useNavigate } from 'react-router-dom';
 
 const Edit = () => {
+  const post = useRecoilValue(editPost);
   const axios = useRecoilValue(instance);
-  const [postList, setPostList] = useRecoilState(posts);
   const categories = useRecoilValue(categoryList);
-  const [content, onChangeContent, setContent] = useInput('');
-  const [selectCategory, setSelectCategory] = useState(null);
+  const [content, onChangeContent, setContent] = useInput(post.content);
+  const [selectCategory, setSelectCategory] = useState(post.category_id);
   const [tags, setTags] = useRecoilState(tagList);
-  const [search, onChangeSearchEvent, setSearch] = useOpen(true);
+  const [search, onChangeSearchEvent, setSearch] = useOpen(post.search);
+  const navigate = useNavigate();
+  
+  useEffect(()=> {
+    setTags(JSON.parse(post.tags));
+  },[]);
 
   /* 문구 등록 버튼 */
   const createPost = useCallback(() => {
     if (!selectCategory || !content) return null;
     axios
-      .post('/user/post', {
+      .patch(`/user/post/${post.id}`, {
         content: content,
         search: search,
         category_id: selectCategory,
@@ -34,21 +40,12 @@ const Edit = () => {
       })
       .then((res) => {
         if (res.data.success) {
-          if (postList.length === 0) {
-            setPostList([res.data.response]);
-          } else {
-            const newPostList = postList.slice(0, postList.length);
-            newPostList.push(res.data.response);
-            setPostList(newPostList);
+            setTags([]);
+            navigate('/');
           }
-        }
-      })
+        })
       .catch((e) => console.log(e));
-
-    setContent('');
-    setSelectCategory(null);
-    setTags([]);
-  }, [axios, content, search, selectCategory, tags, postList, setPostList, setTags, setContent]);
+  }, [axios, post,content, search, selectCategory, tags,setTags,navigate]);
 
   /* for category 선택 모달 */
   const [categoryButton, setCategoryButton] = useState(null);
@@ -87,7 +84,10 @@ const Edit = () => {
 
   const deleteTagEvent = useCallback(
     (e) => {
-      const newTags = tags.filter((v) => v !== e.target.id);
+      const newTags = tags.filter((v) => v.tag !== e.target.id);
+      console.log(tags);
+      console.log(e.target.id);
+      console.log(newTags);
       setTags(newTags);
     },
     [tags, setTags]

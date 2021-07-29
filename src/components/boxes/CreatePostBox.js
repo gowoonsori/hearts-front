@@ -10,7 +10,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import useInput from '../../hooks/useInput';
 import instance from '../../atoms/axios';
-import posts from '../../atoms/post';
+import {posts} from '../../atoms/post';
 import useOpen from '../../hooks/useOpen';
 
 const CreatePostBox = () => {
@@ -87,7 +87,7 @@ const CreatePostBox = () => {
 
   const deleteTagEvent = useCallback(
     (e) => {
-      const newTags = tags.filter((v) => v !== e.target.id);
+      const newTags = tags.filter((v) => v.tag !== e.target.id);
       setTags(newTags);
     },
     [tags, setTags]

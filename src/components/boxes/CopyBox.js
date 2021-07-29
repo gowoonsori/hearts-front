@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import '../../css/filter.css';
 import instance from '../../atoms/axios';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import posts from '../../atoms/post';
+import {posts} from '../../atoms/post';
 
 const CopyBox = ({ id, Icon, content }) => {
   const copyRef = useRef();

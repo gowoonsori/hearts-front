@@ -1,7 +1,7 @@
 import { Container } from '@material-ui/core';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import CreatePostBox from '../components/boxes/CreatePostBox';
-import posts from '../atoms/post';
+import {posts} from '../atoms/post';
 import PostList from '../components/lists/PostList';
 import instance from '../atoms/axios';
 import { useEffect } from 'react';

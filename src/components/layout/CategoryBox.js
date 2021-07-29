@@ -3,7 +3,7 @@ import { Box, TextField, Typography } from '@material-ui/core';
 import { useCallback, useState } from 'react';
 import instance from '../../atoms/axios';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import posts from '../../atoms/post';
+import {posts} from '../../atoms/post';
 import CloseIcon from '@material-ui/icons/Close';
 import EditIcon from '@material-ui/icons/Edit';
 import { categoryList } from '../../atoms/category';
@@ -37,7 +37,7 @@ const CreateBox = ({ category, onClose }) => {
       .then((res) => {
         if (res?.data.success) {
           const newList = categories.slice(0, categories.length);
-          const index = newList.findIndex((v) => v.id == category.id);
+          const index = newList.findIndex((v) => v.id === category.id);
           newList.splice(index, 1, res.data.response);
           setCategories(newList);
         }
@@ -55,7 +55,7 @@ const CreateBox = ({ category, onClose }) => {
         }
       })
       .catch((e) => console.log(e));
-  }, [axios, categories, setCategories]);
+  }, [axios,category, categories, setCategories]);
 
   return category.id !== 1 && openEdit ? (
     <Box sx={{ display: 'flex', p: 1 }}>

@@ -3,12 +3,13 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useState, useCallback } from 'react';
 import instance from '../../atoms/axios';
-import posts from '../../atoms/post';
+import {posts, selectPost} from '../../atoms/post';
 import { useNavigate } from 'react-router-dom';
 
 const MoreButton = ({ id }) => {
   const axios = useRecoilValue(instance);
   const [postList, setPostList] = useRecoilState(posts);
+  const [selectId, setSelectId] = useRecoilState(selectPost);
   const navigate = useNavigate();
 
   const deletePost = useCallback(() => {
@@ -16,12 +17,12 @@ const MoreButton = ({ id }) => {
       .delete(`/user/post/${id}`)
       .then((res) => {
         if (res?.data.success) {
-          const newLikeList = postList.filter((post) => post.id != id);
+          const newLikeList = postList.filter((post) => post.id !== id);
           setPostList(newLikeList);
         }
       })
       .catch((e) => console.log(e));
-  }, [axios, postList, setPostList]);
+  }, [id,axios, postList, setPostList]);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = useCallback(
@@ -34,9 +35,10 @@ const MoreButton = ({ id }) => {
     setAnchorEl(null);
   }, [setAnchorEl]);
 
-  const updateClick = useCallback(() => {
+  const updateClick = useCallback(async() => {
+    await setSelectId(id);
     navigate('/edit');
-  }, [navigate]);
+  }, [id,setSelectId,navigate]);
 
   const open = Boolean(anchorEl);
 

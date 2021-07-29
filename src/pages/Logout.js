@@ -15,7 +15,7 @@ const LogOut = () => {
         if(res.data.success)navigate('/login', { replace: true });
         else navigate('/');
     }).catch(e=> console.log(e));
-  }, []);
+  }, [axios,setUserInfo,navigate]);
   return <></>;
 };
 

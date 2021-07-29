@@ -1,10 +1,10 @@
 import { Container, Box} from '@material-ui/core';
-import { useRecoilState } from 'recoil';
+import {  useRecoilValue } from 'recoil';
 import {user} from '../atoms/user';
 import Auth from '../hoc/auth';
 
 const Profile = () => {
-  const [userInfo,setUserInfo] = useRecoilState(user);
+  const userInfo = useRecoilValue(user);
   return (
     <Container sx={{ background: '#030303', height: '100%', mt:4, color: '#d7dadc' }} maxWidth={false}>
         <Box>Profile</Box>

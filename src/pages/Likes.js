@@ -1,14 +1,14 @@
 import { Container } from '@material-ui/core';
 import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import posts from '../atoms/post';
+import {  useRecoilState, useRecoilValue } from 'recoil';
+import {likePosts} from '../atoms/post';
 import PostList from '../components/lists/PostList';
 import instance from '../atoms/axios';
 import Auth from '../hoc/auth';
 
 const Likes = () => {
   const axios = useRecoilValue(instance);
-  const [postList, setPostList] = useRecoilState(posts);
+  const [postList,setPostList] = useRecoilState(likePosts);
 
   useEffect(() => {
     axios
