@@ -33,7 +33,7 @@ const CreatePostBox = () => {
         tags: tags,
       }).then((res)=>{
         if (res.data.success) {
-          if(postList.length===0){
+          if(!postList || postList?.length===0){
             setPostList([res.data.response]);
           }else{
             const newPostList = postList.slice(0, postList.length);

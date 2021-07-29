@@ -5,6 +5,10 @@ const instance = atom({
   key: 'instance',
   default: axios.create({
     baseURL: 'http://localhost/api',
+    headers: {
+      'Content-Type' : 'application/json;utf-8',
+      'Accept' : 'application/json'
+    } 
   }),
 });
 

@@ -20,7 +20,6 @@ const PostBox = ({ post }) => {
   const [postList, setPostList] = useRecoilState(posts);
   const [likePostList, setLikePostList] = useRecoilState(likePosts);
   const axios = useRecoilValue(instance);
-  const tags = typeof post.tags === 'string' ? JSON.parse(post.tags) : post.tags;
 
   const likeEvent = useCallback(async () => {
     const res = await axios.patch(`/user/post/${post.id}/like`).catch((e) => console.log(e));
@@ -28,7 +27,7 @@ const PostBox = ({ post }) => {
       //좋아요 atom 업데이트
       const newLikeList = likeList.slice(0, likeList.length);
       newLikeList.push(post.id);
-      setLikeList(newLikeList);
+      await setLikeList(newLikeList);
       
       //기존의 postList atom 내용 업데이트
       const newPostList = postList.slice(0, postList.length);
@@ -36,15 +35,14 @@ const PostBox = ({ post }) => {
       newPostList.splice(index, 1, res.data.response);
       setPostList(newPostList);
     }
-  }, [likeList, setLikeList, postList, setPostList]);
+  }, [axios,post,likeList, setLikeList, postList, setPostList]);
   
-  console.log(likeList);
   const deleteLikeEvent = useCallback(async () => {
-    const res = await axios.delete(`/user/post/${post.id}/like`).catch((e) => console.log(2));
+    const res = await axios.delete(`/user/post/${post.id}/like`).catch((e) => console.log(e));
     if (res?.data.success) {
       //좋아요 atom 업데이트
       const newLikeList = likeList.filter((like) => like !== post.id);
-      setLikeList(newLikeList);
+      await setLikeList(newLikeList);
       
       //기존의 postList atom 내용 업데이트
       const newPostList = postList.slice(0, postList.length);
@@ -56,7 +54,7 @@ const PostBox = ({ post }) => {
       const newLikePostList = likePostList.filter((e)=> e.id !== post.id);
       setLikePostList(newLikePostList);
     }
-  }, [likeList, post, setLikeList, postList, setPostList,likePostList,setLikePostList]);
+  }, [axios,likeList, post, setLikeList, postList, setPostList,likePostList,setLikePostList]);
   
   const liked = useCallback(() => {
     return likeList.find((v) => v === post.id);
@@ -76,7 +74,7 @@ const PostBox = ({ post }) => {
       <Box sx={{ display: 'inline' }}>
         <Typography variant="h2">{post.content}</Typography>
       </Box>
-      <TagList tags={tags} />
+      <TagList tags={post.tags} />
       <Box sx={{ width: '100%', display: 'inline-flex', justifyContent: 'space-between', mt: 2 }}>
         {liked() ? <PostUtilBox Icon={FavoriteIcon} text={post.total_like} onClick={deleteLikeEvent} /> : <PostUtilBox Icon={FavoriteBorderIcon} text={post.total_like} onClick={likeEvent} />}
         <PostUtilBox Icon={ShareIcon} text={post.share_cnt} />

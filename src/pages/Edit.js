@@ -23,10 +23,6 @@ const Edit = () => {
   const [tags, setTags] = useRecoilState(tagList);
   const [search, onChangeSearchEvent, setSearch] = useOpen(post.search);
   const navigate = useNavigate();
-  
-  useEffect(()=> {
-    setTags(JSON.parse(post.tags));
-  },[]);
 
   /* 문구 등록 버튼 */
   const createPost = useCallback(() => {
