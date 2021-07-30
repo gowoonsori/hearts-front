@@ -15,7 +15,7 @@ const CategoryList = ({onClose}) => {
       }}
     >
       {categories.map((category) => (
-        <CategoryBox key={category.id} category={category} onClose={onClose} ></CategoryBox>
+        <CategoryBox key={category.id} category={category} onClose={onClose}></CategoryBox>
       ))}
     </Box>
   );

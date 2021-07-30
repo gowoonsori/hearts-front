@@ -5,15 +5,10 @@ export const posts = atom({
   default: [],
 });
 
-export const likePosts = atom({
-  key: 'likePosts',
-  default: [],
-});
-
 export const selectPost = atom({
   key: 'selectPost',
   default: '',
-})
+});
 
 export const editPost = selector({
   key: 'editPost',
@@ -22,8 +17,3 @@ export const editPost = selector({
     return postList.find((p)=> p.id === get(selectPost));
   }
 });
-
-export const searchPost = atom({
-  key: 'searchPost',
-  default:[],
-})

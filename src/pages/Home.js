@@ -5,22 +5,13 @@ import {posts} from '../atoms/post';
 import PostList from '../components/lists/PostList';
 import instance from '../atoms/axios';
 import { useEffect } from 'react';
-import { categoryList } from '../atoms/category';
 import Auth from '../hoc/auth';
 
 const Home = () => {
   const [postList, setPostList] = useRecoilState(posts);
-  const [categories, setCategories] = useRecoilState(categoryList);
   const axios = useRecoilValue(instance);
 
   useEffect(() => {
-    axios
-    .get('/user/category')
-    .then((res) => {
-      if (res?.data.success) setCategories(res.data.response);
-    })
-    .catch((e) => console.log(e));
-
     axios
       .get('/user/post/all')
       .then((res) => {
@@ -28,7 +19,7 @@ const Home = () => {
       })
       .catch((e) => console.log(e));
    
-  }, [axios, setCategories,  setPostList ]);
+  }, [axios,  setPostList ]);
 
   return (
     <Container sx={{ mt: 3 }} maxWidth="md">

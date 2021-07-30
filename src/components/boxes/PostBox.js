@@ -12,13 +12,12 @@ import likes from '../../atoms/likes';
 import CopyBox from './CopyBox';
 import instance from '../../atoms/axios';
 import { useCallback, useMemo } from 'react';
-import {likePosts, posts} from '../../atoms/post';
+import { posts} from '../../atoms/post';
 
 const PostBox = ({ post }) => {
   const userInfo = useRecoilValue(user);
   const [likeList, setLikeList] = useRecoilState(likes);
   const [postList, setPostList] = useRecoilState(posts);
-  const [likePostList, setLikePostList] = useRecoilState(likePosts);
   const axios = useRecoilValue(instance);
 
   const likeEvent = useCallback(() => {
@@ -55,12 +54,10 @@ const PostBox = ({ post }) => {
         newPostList.splice(index, 1, res.data.response);
          setPostList(newPostList);
         
-        //좋아요 리스트 업데이트
-        const newLikePostList = likePostList.filter((e)=> e.id !== post.id);
-        setLikePostList(newLikePostList);
+      
       }
     }).catch((e) => console.log(e));
-  }, [axios,likeList, post, setLikeList, postList, setPostList,likePostList,setLikePostList]);
+  }, [axios,likeList, post, setLikeList, postList, setPostList]);
 
   const liked = useMemo(() => {
     return (likeList.includes(post.id));

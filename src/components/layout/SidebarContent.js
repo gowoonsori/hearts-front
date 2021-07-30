@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import MyCategoryFilter from '../filters/MyCategoryFilter';
 import { Box, Button, TextField, Typography } from '@material-ui/core';
 import { experimentalStyled } from '@material-ui/core';
@@ -16,7 +15,7 @@ const BoxContainer = experimentalStyled('div')(() => ({
   padding: '8px',
 }));
 
-const SidebarContetnt = ({ onClose }) => {
+const SidebarContetnt = ({onClose}) => {
   const axios = useRecoilValue(instance);
   const [categories, setCategories] = useRecoilState(categoryList);
   const [category, onChangeCategory, setCategory] = useInput('');
@@ -68,14 +67,11 @@ const SidebarContetnt = ({ onClose }) => {
       </Typography>
 
       <BoxContainer>
-        <CategoryList onClose={onClose} />
+        <CategoryList onClose={onClose}/>
       </BoxContainer>
     </Box>
   );
 };
 
-SidebarContetnt.propTypes = {
-  onClose: PropTypes.func.isRequired,
-};
 
 export default SidebarContetnt;

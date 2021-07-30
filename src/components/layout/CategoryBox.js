@@ -3,29 +3,26 @@ import { Box, TextField, Typography } from '@material-ui/core';
 import { useCallback, useState } from 'react';
 import instance from '../../atoms/axios';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import {posts} from '../../atoms/post';
 import CloseIcon from '@material-ui/icons/Close';
 import EditIcon from '@material-ui/icons/Edit';
-import { categoryList } from '../../atoms/category';
 import useInput from '../../hooks/useInput';
 import useOpen from '../../hooks/useOpen';
 import CategoryEditButton from '../buttons/CategoryEditButton';
+import { useNavigate } from 'react-router-dom';
+import { categoryList } from '../../atoms/category';
 
-const CreateBox = ({ category, onClose }) => {
+const CreateBox = ({ category,onClose  }) => {
   const axios = useRecoilValue(instance);
-  const [postList, setPostList] = useRecoilState(posts);
-  const [categories, setCategories] = useRecoilState(categoryList);
+  const [categories, setCategories] = useRecoilState(categoryList)
   const [openEdit, onChangeOpenEdit, setOpenEdit] = useOpen(false);
   const [onMouse, setOnMouse] = useState(false);
   const [inputCategory, onChangeInputCategory, setInputCategory] = useInput(category.title);
+  const navigate = useNavigate();
 
-  const getPostsEvent = useCallback(async () => {
-    const res = await axios.get(`/user/post/category/${category.id}`).catch((e) => console.log(e));
-    if (res?.data?.success) {
-      setPostList(res.data.response);
-    }
-    onClose();
-  }, [axios, setPostList, category, onClose]);
+  const getPostsEvent = useCallback(() => {
+      navigate(`/category?id=${category.id}`);
+      onClose();
+  },[]);
 
   const updateCategoryEvent = useCallback(() => {
     if (category.title === inputCategory) return null;
@@ -92,7 +89,7 @@ const CreateBox = ({ category, onClose }) => {
 
 CreateBox.propTypes = {
   category: PropTypes.object,
-  onClose: PropTypes.func.isRequired,
+  onClose : PropTypes.func,
 };
 
 export default CreateBox;
