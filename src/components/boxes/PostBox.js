@@ -11,7 +11,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import likes from '../../atoms/likes';
 import CopyBox from './CopyBox';
 import instance from '../../atoms/axios';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import {likePosts, posts} from '../../atoms/post';
 
 const PostBox = ({ post }) => {
@@ -21,43 +21,49 @@ const PostBox = ({ post }) => {
   const [likePostList, setLikePostList] = useRecoilState(likePosts);
   const axios = useRecoilValue(instance);
 
-  const likeEvent = useCallback(async () => {
-    const res = await axios.patch(`/user/post/${post.id}/like`).catch((e) => console.log(e));
-    if (res?.data.success) {
-      //좋아요 atom 업데이트
-      const newLikeList = likeList.slice(0, likeList.length);
-      newLikeList.push(post.id);
-      await setLikeList(newLikeList);
-      
-      //기존의 postList atom 내용 업데이트
-      const newPostList = postList.slice(0, postList.length);
-      const index = newPostList.findIndex((e) => e.id === post.id);
-      newPostList.splice(index, 1, res.data.response);
-      setPostList(newPostList);
-    }
+  const likeEvent = useCallback(() => {
+    axios.patch(`/user/post/${post.id}/like`)
+    .then(res =>{
+      if (res?.data.success) {
+        //좋아요 atom 업데이트
+        const newLikeList = likeList.slice(0, likeList.length);
+        newLikeList.push(post.id);
+        setLikeList(newLikeList);
+        
+        //기존의 postList atom 내용 업데이트
+        const newPostList = postList.slice(0, postList.length);
+        const index = newPostList.findIndex((e) => e.id === post.id);
+        newPostList.splice(index, 1, res.data.response);
+        setPostList(newPostList);
+      }
+    })
+    .catch((e) => console.log(e));
+    
   }, [axios,post,likeList, setLikeList, postList, setPostList]);
   
   const deleteLikeEvent = useCallback(async () => {
-    const res = await axios.delete(`/user/post/${post.id}/like`).catch((e) => console.log(e));
-    if (res?.data.success) {
-      //좋아요 atom 업데이트
-      const newLikeList = likeList.filter((like) => like !== post.id);
-      await setLikeList(newLikeList);
-      
-      //기존의 postList atom 내용 업데이트
-      const newPostList = postList.slice(0, postList.length);
-      const index = newPostList.findIndex((e) => e.id === post.id);
-      newPostList.splice(index, 1, res.data.response);
-      setPostList(newPostList);
-      
-      //좋아요 리스트 업데이트
-      const newLikePostList = likePostList.filter((e)=> e.id !== post.id);
-      setLikePostList(newLikePostList);
-    }
+    axios.delete(`/user/post/${post.id}/like`)
+    .then(res => {
+      if (res?.data.success) {
+        //좋아요 atom 업데이트
+        const newLikeList = likeList.filter((like) => like !== post.id);
+         setLikeList(newLikeList);
+        
+        //기존의 postList atom 내용 업데이트
+        const newPostList = postList.slice(0, postList.length);
+        const index = newPostList.findIndex((e) => e.id === post.id);
+        newPostList.splice(index, 1, res.data.response);
+         setPostList(newPostList);
+        
+        //좋아요 리스트 업데이트
+        const newLikePostList = likePostList.filter((e)=> e.id !== post.id);
+        setLikePostList(newLikePostList);
+      }
+    }).catch((e) => console.log(e));
   }, [axios,likeList, post, setLikeList, postList, setPostList,likePostList,setLikePostList]);
-  
-  const liked = useCallback(() => {
-    return likeList.find((v) => v === post.id);
+
+  const liked = useMemo(() => {
+    return (likeList.includes(post.id));
   }, [likeList]);
   
   return (
@@ -76,7 +82,7 @@ const PostBox = ({ post }) => {
       </Box>
       <TagList tags={post.tags} />
       <Box sx={{ width: '100%', display: 'inline-flex', justifyContent: 'space-between', mt: 2 }}>
-        {liked() ? <PostUtilBox Icon={FavoriteIcon} text={post.total_like} onClick={deleteLikeEvent} /> : <PostUtilBox Icon={FavoriteBorderIcon} text={post.total_like} onClick={likeEvent} />}
+        {liked ? <PostUtilBox Icon={FavoriteIcon} text={post.total_like} onClick={deleteLikeEvent} /> : <PostUtilBox Icon={FavoriteBorderIcon} text={post.total_like} onClick={likeEvent} />}
         <PostUtilBox Icon={ShareIcon} text={post.share_cnt} />
         <CopyBox id={post.id} Icon={FileCopyIcon} content={post.content} />
         {post.user_id === userInfo.id && <MoreButton id={post.id} />}

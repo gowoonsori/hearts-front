@@ -6,6 +6,7 @@ import Profile from './pages/Profile';
 import Likes from './pages/Likes';
 import Edit from './pages/Edit';
 import LogOut from './pages/Logout';
+import Search from './pages/Search';
 
 const routes = [
   {
@@ -18,6 +19,7 @@ const routes = [
       { path: '/profile', element: <Profile /> },
       { path: '/logout', element: <LogOut /> },
       { path: '/edit', element: <Edit /> },
+      { path: '/search', element: <Search /> },
     ],
   },
   {

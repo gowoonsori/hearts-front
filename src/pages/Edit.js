@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Container, Divider, TextField, Typography } from '@material-ui/core';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { categoryList } from '../atoms/category';
 import { tagList } from '../atoms/tag';
