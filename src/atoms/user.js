@@ -12,12 +12,10 @@ export const userSelector = selector({
   get: async ({ get }) => {
     if (get(user).id) return get(user);
     
-    const res = await get(instance).get('/user').catch((e) => {
-      return '잘못된 요청입니다.';
+    const res = await get(instance).get('/user').catch((error) => {
+      return error.response;
     });
-    if(typeof(res)==='string')return res;
-    else if(res.data.success) return res.data.response;
-    else return res.data.response.message;
+    return res?.data;
   },
   set: ({ set }, userInfo) => {
     set(user, userInfo);

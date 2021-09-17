@@ -1,4 +1,5 @@
 import { atom, selector } from 'recoil';
+import instance from './axios';
 
 export const posts = atom({
   key: 'posts',
@@ -13,7 +14,16 @@ export const selectPost = atom({
 export const editPost = selector({
   key: 'editPost',
   get: ({get}) => {
-    const postList = get(posts);
-    return postList.find((p)=> p.id === get(selectPost));
+    const editPostId = get(selectPost);
+    if(editPostId === '') return false;
+
+    const res = get(instance).get(`/user/post/${editPostId}`)
+      .then(res => {
+        return res.data.response;
+      })
+      .catch(error =>{
+        return false;
+      });
+    return res;
   }
 });

@@ -3,25 +3,44 @@ import { Box } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import '../../css/filter.css';
 import instance from '../../atoms/axios';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {posts} from '../../atoms/post';
+import { alertState } from '../../atoms/alert';
+import { useNavigate } from 'react-router-dom';
 
-const CopyBox = ({ id, Icon, content }) => {
+const CopyBox = ({ id, Icon, content,onClick }) => {
   const copyRef = useRef();
   const [postList, setPostList] = useRecoilState(posts);
   const axios = useRecoilValue(instance);
+  const setOpenAlert = useSetRecoilState(alertState);
+  const navigate = useNavigate();
 
-  const copyEvent = useCallback(async () => {
+  const copyEvent = useCallback(() => {
     copyRef.current.select();
     document.execCommand('copy');
-    const res = await axios.patch(`/user/post/${id}/share`);
-    if (res.data.success) {
-      const newList = postList.slice(0, postList.length);
-      const index = newList.findIndex((e) => e.id === id);
-      newList.splice(index, 1, res.data.response);
-      setPostList(newList);
-    }
-  }, [copyRef, postList, setPostList, axios, id]);
+    axios.patch(`/user/post/${id}/share`)
+    .then(res => {
+      if (res.data.success) {
+        onClick();
+        setOpenAlert({
+          state : true,
+          message : '복사되었습니다.',
+          severity: 'success',
+        });
+      }
+    })
+    .catch(error => {
+      if (error.response) {
+        setOpenAlert({state : true, message : error.response.data.response.message, severity : 'error' });
+        if(error.response.data.response.status === 401 ){
+          navigate('/login', { replace: true });
+          return;
+        }
+        else if(error.response.data.response.status === 500 ) navigate('/',{replace:true});
+      }
+      else setOpenAlert({state:true, message: '서버로부터 응답이 없습니다.', severity: 'error' });
+    });
+  }, [copyRef, postList, setPostList, axios, id,setOpenAlert,navigate,onClick]);
 
   return (
     <Box sx={{ display: 'inline-flex', mr: 2 }}>
@@ -35,6 +54,7 @@ CopyBox.propTypes = {
   id: PropTypes.number.isRequired,
   Icon: PropTypes.object.isRequired,
   content: PropTypes.string.isRequired,
+  onClick : PropTypes.func.isRequired,
 };
 
 export default CopyBox;

@@ -1,22 +1,21 @@
 import { useCallback, useState } from 'react';
 import { Box, Popover, TextField, Typography } from '@material-ui/core';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import PropTypes from 'prop-types';
 import { tagList } from '../../atoms/tag';
 import TagBox from './TagBox';
+import { alertState } from '../../atoms/alert';
 
 const TagSelectBox = ({ anchor, onClose, open }) => {
   const [tags, setTags] = useRecoilState(tagList);
   const [createTag, setCreateTag] = useState('');
-  const randomColor = useCallback(() => Math.ceil((Math.random() * 360) % 360).toString(10), []);
+  const randomColor = () => Math.ceil((Math.random() * 360) % 360).toString(10);
   const [createTagObject, setCreateTagObject] = useState({});
   const [currentColor, setCurrentColor] = useState(Number.parseInt(randomColor()));
+  const setOpenAlert = useSetRecoilState(alertState);
 
   const onChangeTag = useCallback(
     (e) => {
-      if (!currentColor) {
-        setCurrentColor(Number.parseInt(randomColor()));
-      }
       setCreateTagObject({
         tag: e.target.value,
         color: currentColor,
@@ -27,24 +26,35 @@ const TagSelectBox = ({ anchor, onClose, open }) => {
   );
 
   const createTagEvent = useCallback(() => {
-    if (!tags.find((e) => e === createTag)) {
-      const newTags = [...tags, createTagObject];
-      setTags(newTags);
+    if(createTag.length > 12) {
+      setOpenAlert({state : true, message : "tag는 최대 12자까지 입력이 가능합니다.", severity : 'error' });
+      return;
+    }else if(/[^a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]/.test(createTag) === true){
+      setOpenAlert({state : true, message : "Tag는 공백제외한 문자와 숫자만 입력이 가능합니다.", severity : 'error' });
+      return;
+    }else if(tags.length === 5){
+      setOpenAlert({state : true, message : "Tag는 최대 5개까지 입력이 가능합니다.", severity : 'error' });
+      return;
+    }else if(tags.find((e) => e.tag === createTag) !== undefined){
+      setCreateTag('')
+      return;
     }
+    
+    const newTags = [...tags, createTagObject];
+    setTags(newTags);
     setCreateTag('');
-    setCurrentColor(null);
-  }, [tags, createTag, setTags, createTagObject, setCreateTag, setCurrentColor]);
+    setCurrentColor(Number.parseInt(randomColor()));
+  }, [createTag]);
 
-  const onEnterPress = useCallback(
-    (e) => {
+  const onEnterPress = (e) => {
       if (e.key === 'Enter') createTagEvent();
-    },
-    [createTagEvent]
-  );
+  };
+
 
   const deleteTagEvent = useCallback(() => {
     setCreateTag('');
   }, [setCreateTag]);
+
 
   return (
     <Popover

@@ -21,6 +21,10 @@ const theme = createMuiTheme({
       main: '#272729',
       contrastText: '#757575',
     },
+    quaternary: {
+      main: '#d7dadc',
+      contrastText: '#030303',
+    },
     text: {
       primary: '#d7dadc',
       secondary: '#d7dadc',

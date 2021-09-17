@@ -1,5 +1,6 @@
 .img {
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
+  background-image: url('http://localhost/images/saramin-white.jpg');
+  width: 50%;
+  background-size: contain;
+  overflow : auto;
 }

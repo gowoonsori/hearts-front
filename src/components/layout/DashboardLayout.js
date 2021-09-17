@@ -28,6 +28,7 @@ const DashboardLayoutContainer = experimentalStyled('div')({
 
 const DashboardLayoutContent = experimentalStyled('div')({
   flex: '1 1 auto',
+  marginTop: '22px',
   height: '100%',
   overflow: 'auto'
 });
@@ -36,12 +37,12 @@ const DashboardLayout = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   return (
-    <DashboardLayoutRoot>
+    <DashboardLayoutRoot id="dashboard-layout-root">
       <DashboardNavbar onNavOpen={() => setIsNavOpen(true)} />
       <DashboardSidebar onClose={() => setIsNavOpen(false)} open={isNavOpen} />
-      <DashboardLayoutWrapper>
-        <DashboardLayoutContainer>
-          <DashboardLayoutContent>
+      <DashboardLayoutWrapper id="dashboard-layout-wrapper">
+        <DashboardLayoutContainer id="dashboard-layout-container">
+          <DashboardLayoutContent id="dashboard-layout-content">
             <Outlet />
           </DashboardLayoutContent>
         </DashboardLayoutContainer>
